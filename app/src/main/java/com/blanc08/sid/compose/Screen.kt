@@ -30,13 +30,14 @@ sealed class Screen(
 
     data object Report : Screen(route = "profile")
 
-    data object TransactionDetail : Screen(
-        route = "transaction/{id}",
+    
+    data object PlaceDetail : Screen(
+        route = "place/{id}",
         navArguments = listOf(navArgument("id") {
             type = NavType.StringType
         })
     ) {
-        fun createRoute(id: String) = "transaction/${id}"
+        fun createRoute(id: String) = "place/${id}"
     }
 }
 

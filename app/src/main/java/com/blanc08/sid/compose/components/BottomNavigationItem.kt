@@ -3,7 +3,9 @@ package com.blanc08.sid.compose.components
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.rounded.MonitorHeart
+import androidx.compose.material.icons.rounded.PhotoAlbum
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.blanc08.sid.compose.Screen
 
@@ -22,13 +24,13 @@ data class BottomNavigationItem(
                 route = Screen.Home.route
             ),
             BottomNavigationItem(
-                label = "Transaction",
-                icon = Icons.Rounded.MonitorHeart,
+                label = "Gallery",
+                icon = Icons.Rounded.PhotoAlbum,
                 route = Screen.Transaction.route
             ),
             BottomNavigationItem(
-                label = "Report",
-                icon = Icons.Filled.Bookmark,
+                label = "Info",
+                icon = Icons.Filled.Info,
                 route = Screen.Report.route
             ),
         )

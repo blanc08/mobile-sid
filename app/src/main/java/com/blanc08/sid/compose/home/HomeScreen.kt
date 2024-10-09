@@ -1,39 +1,91 @@
 package com.blanc08.sid.compose.home
 
-import androidx.compose.foundation.background
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.ChatBubble
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import coil3.compose.rememberAsyncImagePainter
+import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.ui.theme.AppTheme
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.blanc08.sid.viewmodels.PlaceListViewModel
+
+private const val buffer = 1;
 
 @Composable
-fun HomeScreen() {
-    Column {
+fun HomeScreen(
+    onCardClick: (Place) -> Unit,
+    placeListViewModel: PlaceListViewModel = hiltViewModel()
+) {
+    val listState = rememberLazyListState()
+
+    val places by placeListViewModel.places.collectAsState()
+
+    // observe list scrolling
+    val reachedBottom: Boolean by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - buffer
+        }
+    }
+
+    // load more if scrolled to bottom
+    LaunchedEffect(reachedBottom) {
+        if (reachedBottom) placeListViewModel.loadPlaces()
+    }
+
+    LaunchedEffect(places) {
+        Log.d("Home Screen", "places" + places.toList())
+    }
+
+
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Header()
-        MainContent()
+        LazyColumn(
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            content = {
+                items(items = places, key = { place -> place.id }) { place ->
+                    PlaceCard(place, onCardClick = {
+                        onCardClick(place)
+                    })
+                }
+            }
+        )
     }
 }
+
 
 @Composable
 fun Header() {
@@ -58,38 +110,22 @@ fun Header() {
                 GreetingText()
                 UtilIcons()
             }
-            ExpensesCard()
-            Spacer(modifier = Modifier.height(16.dp))
-            BalanceRow()
         }
     }
 }
 
 @Composable
 fun UtilIcons() {
-    Row {
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(20.dp)
-        ) {
-            Icon(
-                Icons.Filled.ChatBubble,
-                contentDescription = "Chat",
-                tint = MaterialTheme.colorScheme.background,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(20.dp)
-        ) {
-            Icon(
-                Icons.Filled.DarkMode,
-                contentDescription = "Toggle Dark Mode",
-                tint = MaterialTheme.colorScheme.background,
-            )
-        }
+    IconButton(
+        onClick = {},
+        modifier = Modifier
+            .size(20.dp)
+    ) {
+        Icon(
+            Icons.Filled.DarkMode,
+            contentDescription = "Toggle Dark Mode",
+            tint = MaterialTheme.colorScheme.background,
+        )
     }
 }
 
@@ -97,7 +133,7 @@ fun UtilIcons() {
 fun GreetingText() {
     Column {
         Text(
-            "Halo, Bagus!",
+            "Sistem informasi Desa",
             color = MaterialTheme.colorScheme.surface,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
@@ -111,73 +147,9 @@ fun GreetingText() {
 }
 
 @Composable
-fun MainContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        PremiumCard()
-        Spacer(modifier = Modifier.height(16.dp))
-        NewsCard()
-    }
-}
-
-@Composable
-fun ExpensesCard() {
+fun OldPlaceCard(place: Place, modifier: Modifier = Modifier) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
-        ),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Pengeluaran bulan September", fontWeight = FontWeight.Bold)
-            Text(
-                "Tap untuk lihat",
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun BalanceRow() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        BalanceItem("Total Saldo", "Rp*********", Icons.Rounded.Home)
-        BalanceItem("Tabungan", "Mulai Nabung", Icons.Rounded.Home)
-        BalanceItem("Dompet Kamu", "1 Dompet", Icons.Rounded.Home)
-    }
-}
-
-@Composable
-fun BalanceItem(title: String, value: String, icon: ImageVector) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(
-            icon,
-            tint = MaterialTheme.colorScheme.primary,
-            contentDescription = title,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.background)
-                .padding(8.dp)
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-        Text(title, fontSize = 12.sp)
-        Text(value, fontWeight = FontWeight.Bold)
-    }
-}
-
-@Composable
-fun PremiumCard() {
-    Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         elevation = CardDefaults.cardElevation(
@@ -189,20 +161,20 @@ fun PremiumCard() {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-//            Icon(
-//                imageVector = Icons.Default.Add,
-//                contentDescription = "Premium",
-//                modifier = Modifier
-//                    .size(48.dp)
-//                    .clip(CircleShape)
-//                    .padding(8.dp)
-//            )
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Premium",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .padding(8.dp)
+            )
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
             ) {
-                Text("Free", fontWeight = FontWeight.Bold)
+                Text(place.name, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(10.dp))
                 Text("Dapatkan kemudahan atur keuangan")
             }
@@ -215,19 +187,50 @@ fun PremiumCard() {
 }
 
 @Composable
-fun NewsCard() {
+fun PlaceCard(
+    place: Place,
+    onCardClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier
+        onClick = onCardClick,
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp) // Rounded corners for a modern look
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Kabar", fontWeight = FontWeight.Bold)
-            // Add news content here
+        Column {
+            // Thumbnail Image
+            Image(
+                painter = rememberAsyncImagePainter(place.thumbnail),
+                contentDescription = "Thumbnail",
+                modifier = Modifier
+                    .height(180.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp)), // Clip the image to match card corners
+                contentScale = ContentScale.Crop // Crop the image if needed
+            )
+            // Title Text
+            Text(
+                text = place.name,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            )
+            // short desc
+            place.description?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -236,6 +239,6 @@ fun NewsCard() {
 @Composable()
 fun HomeScreenPreview() {
     AppTheme(darkTheme = false) {
-        Header()
+//        HomeScreen(navController = NavHostController(context = LocalContext.current))
     }
 }

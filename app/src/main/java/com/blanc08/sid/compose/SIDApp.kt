@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.blanc08.sid.compose.home.HomeScreen
 import com.blanc08.sid.R
 import com.blanc08.sid.compose.components.BottomNavigationItem
+import com.blanc08.sid.compose.place.PlaceDetailsScreen
 import com.blanc08.sid.ui.theme.AppTheme
 
 @Composable
@@ -82,9 +83,26 @@ fun SakuHost() {
             modifier = Modifier.padding(paddingValues = paddingValues)
         ) {
             composable(Screen.Home.route) {
-                // HomeScreen(navController = navController)
-                HomeScreen()
+                HomeScreen(
+                    onCardClick = {
+                        navController.navigate(
+                            Screen.PlaceDetail.createRoute(
+                                id = it.id
+                            )
+                        )
+                    }
+                )
             }
+
+            composable(
+                route = Screen.PlaceDetail.route,
+                arguments = Screen.PlaceDetail.navArguments
+            ) {
+                PlaceDetailsScreen(
+                    onBackClick = { navController.navigateUp() },
+                )
+            }
+
             composable(Screen.Transaction.route) {
                 Text("Transaction list")
 //                TransactionScreen(

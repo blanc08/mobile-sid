@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    // kotlin("plugin.serialization") version "1.9.20" // version conflict
 }
 
 android {
@@ -41,7 +42,6 @@ android {
 
     buildFeatures {
         viewBinding = true
-        dataBinding = true
         compose = true
         buildConfig = true
     }
@@ -85,6 +85,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.android.compiler)
 
     // Work
@@ -93,4 +94,25 @@ dependencies {
 
     // room
     ksp("androidx.room:room-compiler:2.5.0")
+
+    // supabase
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.0.0"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:realtime-kt")
+
+    // serialization
+    implementation("io.github.jan-tennert.supabase:serializer-jackson:3.0.0")
+
+    // ktor
+    implementation("io.ktor:ktor-client-okhttp:3.0.0-rc-1")
+
+    // coil
+    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-rc01")
+
+    // paging
+    implementation(libs.androidx.paging.common.android)
+    implementation(libs.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 }
