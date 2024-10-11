@@ -7,31 +7,15 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.blanc08.sid.data.util.NetworkMonitor
-import com.blanc08.sid.data.util.TimeZoneMonitor
 import com.blanc08.sid.designsystem.theme.AppTheme
-import com.blanc08.sid.ui.LocalTimeZone
 import com.blanc08.sid.ui.SidApp
 import com.blanc08.sid.ui.rememberSidAppState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -73,42 +57,17 @@ class MainActivity : ComponentActivity() {
 
             val appState = rememberSidAppState()
 
-            AppTheme(
-                darkTheme = darkTheme,
-            ) {
+            AppTheme(darkTheme = darkTheme) {
                 SidApp(appState)
             }
         }
     }
 
+    companion object {
+        const val TAG = "MainActivity"
+    }
 
 }
-
-// /**
-//  * Returns `true` if the Android theme should be used, as a function of the [uiState].
-//  */
-// @Composable
-// private fun shouldUseAndroidTheme(
-//     uiState: MainActivityUiState,
-// ): Boolean = when (uiState) {
-//     MainActivityUiState.Loading -> false
-//     is Success -> when (uiState.userData.themeBrand) {
-//         ThemeBrand.DEFAULT -> false
-//         ThemeBrand.ANDROID -> true
-//     }
-// }
-//
-// /**
-//  * Returns `true` if the dynamic color is disabled, as a function of the [uiState].
-//  */
-// @Composable
-// private fun shouldDisableDynamicTheming(
-//     uiState: MainActivityUiState,
-// ): Boolean = when (uiState) {
-//     Loading -> false
-//     is Success -> !uiState.userData.useDynamicColor
-// }
-
 
 /**
  * The default light scrim, as defined by androidx and the platform:

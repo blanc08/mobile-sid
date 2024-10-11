@@ -36,6 +36,7 @@ fun SidNavHost(
         placeScreen(onBackClick = navController::popBackStack)
         galleryScreen(
             onPictureClick = navController::navigateToPicture,
+            onBackClick = navController::popBackStack
         )
         // searchScreen(
         //     onBackClick = navController::popBackStack,

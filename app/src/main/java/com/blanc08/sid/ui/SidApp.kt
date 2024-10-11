@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,7 +43,11 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.blanc08.sid.compose.Screen
 import com.blanc08.sid.designsystem.component.SidNavigationSuiteScaffold
+import com.blanc08.sid.feature.foryou.navigation.FOR_YOU_ROUTE
+import com.blanc08.sid.feature.gallery.navigation.GALLERY_ROUTE
+import com.blanc08.sid.feature.place.navigation.navigateToNewPlaceForm
 import com.blanc08.sid.navigation.SidNavHost
 import com.blanc08.sid.navigation.TopLevelDestination
 
@@ -50,7 +58,6 @@ fun SidApp(
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
     var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     SidApp(
@@ -85,6 +92,7 @@ internal fun SidApp(
         //     onDismiss = { onSettingsDismissed() },
         // )
     }
+
     SidNavigationSuiteScaffold(
         navigationSuiteItems = {
             appState.topLevelDestinations.forEach { destination ->
@@ -116,6 +124,22 @@ internal fun SidApp(
             modifier = modifier.semantics {
                 testTagsAsResourceId = true
             },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        if (currentDestination != null) {
+                            when (currentDestination.route) {
+                                FOR_YOU_ROUTE -> appState.navController.navigateToNewPlaceForm()
+                                GALLERY_ROUTE -> appState.navController.navigateToNewPlaceForm()
+                            }
+                        }
+
+                    },
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add")
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             snackbarHost = { SnackbarHost(snackbarHostState) },
         ) { padding ->
@@ -132,32 +156,18 @@ internal fun SidApp(
             ) {
                 // Show the top app bar on top level destinations.
                 val destination = appState.currentTopLevelDestination
-                val shouldShowTopAppBar = destination != null
-                // if (destination != null) {
-                //     // We could Add specific AppBar here
-                // }
 
-                Box(
-                    // Workaround for https://issuetracker.google.com/338478720
-                    modifier = Modifier.consumeWindowInsets(
-                        if (shouldShowTopAppBar) {
-                            WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-                        } else {
-                            WindowInsets(0, 0, 0, 0)
-                        },
-                    ),
-                ) {
-                    SidNavHost(
-                        appState = appState,
-                        onShowSnackbar = { message, action ->
-                            snackbarHostState.showSnackbar(
-                                message = message,
-                                actionLabel = action,
-                                duration = Short,
-                            ) == ActionPerformed
-                        },
-                    )
-                }
+                SidNavHost(
+                    appState = appState,
+                    onShowSnackbar = { message, action ->
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            actionLabel = action,
+                            duration = Short,
+                        ) == ActionPerformed
+                    },
+                )
+
 
                 // TODO: We may want to add padding or spacer when the snackbar is shown so that
                 //  content doesn't display behind it.

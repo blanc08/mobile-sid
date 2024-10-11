@@ -6,10 +6,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.blanc08.sid.feature.place.NewPlaceScreen
 import com.blanc08.sid.feature.place.PlaceDetailRoute
 
 const val PLACE_ID_ARG = "placeId"
 const val PLACE_ROUTE_BASE = "place_route"
+const val NEW_PLACE_FORM_ROUTE = "new_place_route"
 const val PLACE_ROUTE = "$PLACE_ROUTE_BASE?$PLACE_ID_ARG={$PLACE_ID_ARG}"
 
 
@@ -20,6 +22,10 @@ fun NavController.navigateToPlaceDetail(placeId: String? = null, navOptions: Nav
         PLACE_ROUTE_BASE
     }
     navigate(route, navOptions)
+}
+
+fun NavController.navigateToNewPlaceForm(navOptions: NavOptions? = null) {
+    navigate(NEW_PLACE_FORM_ROUTE, navOptions)
 }
 
 fun NavGraphBuilder.placeScreen(onBackClick: () -> Unit) {
@@ -34,5 +40,9 @@ fun NavGraphBuilder.placeScreen(onBackClick: () -> Unit) {
         ),
     ) {
         PlaceDetailRoute(onBackClick = onBackClick)
+    }
+
+    composable(route = NEW_PLACE_FORM_ROUTE) {
+        NewPlaceScreen(onBackClick = onBackClick)
     }
 }

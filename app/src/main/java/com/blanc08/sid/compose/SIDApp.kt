@@ -1,6 +1,5 @@
 package com.blanc08.sid.compose
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -27,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,9 +33,8 @@ import androidx.navigation.compose.rememberNavController
 import com.blanc08.sid.compose.home.HomeScreen
 import com.blanc08.sid.R
 import com.blanc08.sid.compose.components.BottomNavigationItem
-import com.blanc08.sid.compose.place.NewPlaceScreen
+import com.blanc08.sid.feature.place.NewPlaceScreen
 import com.blanc08.sid.compose.place.PlaceDetailsScreen
-import com.blanc08.sid.designsystem.theme.AppTheme
 
 @Composable
 fun SIDApp() {

@@ -32,7 +32,6 @@ import javax.inject.Inject
 @HiltViewModel
 class GalleryViewModel @Inject internal constructor(
     private val repository: PhotoRepository,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _photos = MutableStateFlow(emptyList<Photo>())
@@ -40,7 +39,7 @@ class GalleryViewModel @Inject internal constructor(
 
     fun loadAll(offset: String = "") {
         viewModelScope.launch {
-            val result = repository.getPlaces(offset)
+            val result = repository.getPhotos(offset)
 
             Log.d(TAG, "photos fetched: ${result.size}")
             _photos.value = result

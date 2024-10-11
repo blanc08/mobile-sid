@@ -1,4 +1,4 @@
-package com.blanc08.sid.compose.place
+package com.blanc08.sid.feature.gallery
 
 import android.content.Context
 import android.net.Uri
@@ -36,31 +36,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.blanc08.sid.viewmodels.NewPlaceViewModel
-
-fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
-    return try {
-        val inputStream = context.contentResolver.openInputStream(uri)
-        inputStream?.buffered()?.use { it.readBytes() } // Read bytes from the input stream
-    } catch (e: Exception) {
-        Log.e("PhotoPicker", "Error converting URI to ByteArray", e)
-        null
-    }
-}
+import com.blanc08.sid.viewmodels.NewPhotoViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewPlaceScreen(
+fun NewPhotoScreen(
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier, // padding rendered too much with this component composition
-    viewModel: NewPlaceViewModel = hiltViewModel(),
+    viewModel: NewPhotoViewModel = hiltViewModel(),
 ) {
-    val place by viewModel.place.collectAsState()
+    val photo by viewModel.photo.collectAsState()
     val context = LocalContext.current
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     var byteArraySize by remember { mutableStateOf<Int?>(null) }
-    val isSaved by viewModel.saved.collectAsState()
+    val isSaved by viewModel.isSaved.collectAsState()
 
 
     // Registers a photo picker activity launcher in single-select mode.
@@ -92,7 +81,7 @@ fun NewPlaceScreen(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
             title = {
-                Text("New Place")
+                Text("New Photo")
             },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
@@ -126,15 +115,6 @@ fun NewPlaceScreen(
                     text = "Choose image"
                 )
             }
-            // Name
-            TextField(
-                label = { Text("Nama") },
-                modifier = Modifier.fillMaxWidth(),
-                onValueChange = {
-                    viewModel.updateUsername(it)
-                },
-                value = place.name
-            )
             // Description
             TextField(
                 label = { Text("Deskripsi") },
@@ -142,7 +122,7 @@ fun NewPlaceScreen(
                 onValueChange = {
                     viewModel.updateDescription(it)
                 },
-                value = place.description
+                value = photo.description
             )
             Button(
                 onClick = {
@@ -156,7 +136,7 @@ fun NewPlaceScreen(
 
                     if (byteArray != null) {
                         viewModel.save(byteArray)
-                        place.image?.let { Log.d("NewPlaceScreen", "Photo: $it") }
+                        Log.d("NewPhotoScreen", "Photo: ${photo.url}")
                     }
 
 
@@ -167,3 +147,14 @@ fun NewPlaceScreen(
         }
     }
 }
+
+fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
+    return try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        inputStream?.buffered()?.use { it.readBytes() } // Read bytes from the input stream
+    } catch (e: Exception) {
+        Log.e("PhotoPicker", "Error converting URI to ByteArray", e)
+        null
+    }
+}
+
