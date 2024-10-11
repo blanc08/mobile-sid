@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    // kotlin("plugin.serialization") version "1.9.20" // version conflict
+    kotlin("plugin.serialization") version "1.9.20" // version conflict
 }
 
 android {

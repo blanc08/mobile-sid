@@ -30,7 +30,9 @@ sealed class Screen(
 
     data object Report : Screen(route = "profile")
 
-    
+    data object NewPlace : Screen(route = "NewPlace")
+
+
     data object PlaceDetail : Screen(
         route = "place/{id}",
         navArguments = listOf(navArgument("id") {

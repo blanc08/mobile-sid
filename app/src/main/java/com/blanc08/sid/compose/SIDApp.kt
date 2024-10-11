@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.blanc08.sid.compose.home.HomeScreen
 import com.blanc08.sid.R
 import com.blanc08.sid.compose.components.BottomNavigationItem
+import com.blanc08.sid.compose.place.NewPlaceScreen
 import com.blanc08.sid.compose.place.PlaceDetailsScreen
 import com.blanc08.sid.ui.theme.AppTheme
 
@@ -54,7 +55,9 @@ fun SakuHost() {
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO */ },
+                onClick = {
+                    navController.navigate(Screen.NewPlace.route)
+                },
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add")
             }
@@ -99,6 +102,14 @@ fun SakuHost() {
                 arguments = Screen.PlaceDetail.navArguments
             ) {
                 PlaceDetailsScreen(
+                    onBackClick = { navController.navigateUp() },
+                )
+            }
+
+            composable(
+                route = Screen.NewPlace.route,
+            ) {
+                NewPlaceScreen(
                     onBackClick = { navController.navigateUp() },
                 )
             }
