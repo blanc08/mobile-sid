@@ -77,9 +77,9 @@ fun HomeScreen(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             content = {
-                items(items = places, key = { place -> place.id }) { place ->
+                items(items = places, key = { place -> place.id!! }) { place ->
                     PlaceCard(place, onCardClick = {
-                        onCardClick(place.id)
+                        onCardClick(place.id!!)
                     })
                 }
             }

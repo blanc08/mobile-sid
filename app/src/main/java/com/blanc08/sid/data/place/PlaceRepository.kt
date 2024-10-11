@@ -19,14 +19,26 @@ package com.blanc08.sid.data.place
 import android.util.Log
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.result.PostgrestResult
 import io.github.jan.supabase.storage.storage
+import kotlinx.serialization.Serializable
 import java.util.UUID
 import javax.inject.Inject
+
+@Serializable
+data class NewPlace(
+    val name: String = "",
+    val description: String = "",
+    val thumbnail: String = "",
+    val image: String? = "",
+) {
+    override fun toString() = name
+}
 
 class PlaceRepository @Inject constructor(private val client: SupabaseClient) {
 
     suspend fun getPlaces(delta: String = ""): List<Place> {
-        return client.from("place").select() {
+        return client.from("place").select {
             filter {
                 if (delta.isNotEmpty()) {
                     gt("created_at", delta)
@@ -59,8 +71,13 @@ class PlaceRepository @Inject constructor(private val client: SupabaseClient) {
         return ""
     }
 
+    suspend fun createOne(newPlace: NewPlace): Place {
+        return client.from("place").insert(newPlace) {
+            select()
+        }.decodeSingle<Place>()
+    }
+
     companion object {
         private const val TAG = "PlaceRepository"
-        private const val NETWORK_PAGE_SIZE = 25
     }
 }

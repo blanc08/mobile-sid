@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -24,13 +25,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import com.blanc08.sid.viewmodels.NewPlaceViewModel
 
 fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
@@ -55,6 +60,7 @@ fun NewPlaceScreen(
     val context = LocalContext.current
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     var byteArraySize by remember { mutableStateOf<Int?>(null) }
+    val isSaved by viewModel.saved.collectAsState()
 
 
     // Registers a photo picker activity launcher in single-select mode.
@@ -69,6 +75,12 @@ fun NewPlaceScreen(
                 Log.d("PhotoPicker", "No media selected")
             }
         }
+
+    LaunchedEffect(isSaved) {
+        if (isSaved) {
+            onBackClick()
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -91,12 +103,24 @@ fun NewPlaceScreen(
                 }
             },
         )
-        Column(modifier = Modifier.padding(5.dp)) {
+        AsyncImage(
+            model = selectedUri,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
+            contentScale = ContentScale.Fit
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(5.dp)
+        ) {
             // Image Picker
             Button(
                 onClick = {
                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                }
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(
                     text = "Choose image"
@@ -104,6 +128,7 @@ fun NewPlaceScreen(
             }
             // Name
             TextField(
+                label = { Text("Nama") },
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {
                     viewModel.updateUsername(it)
@@ -112,6 +137,7 @@ fun NewPlaceScreen(
             )
             // Description
             TextField(
+                label = { Text("Deskripsi") },
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {
                     viewModel.updateDescription(it)
@@ -129,9 +155,11 @@ fun NewPlaceScreen(
                     byteArraySize = byteArray?.size
 
                     if (byteArray != null) {
-                        viewModel.uploadPhoto(byteArray)
+                        viewModel.save(byteArray)
                         place.image?.let { Log.d("NewPlaceScreen", "Photo: $it") }
                     }
+
+
                 }
             ) {
                 Text("Post")
