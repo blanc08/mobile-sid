@@ -1,4 +1,4 @@
-package com.blanc08.sid.compose.home
+package com.blanc08.sid.feature.foryou
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -6,11 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,13 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.ui.theme.AppTheme
@@ -44,14 +39,31 @@ import com.blanc08.sid.viewmodels.PlaceListViewModel
 private const val buffer = 1;
 
 @Composable
-fun HomeScreen(
+fun ForYouRoute(
     onCardClick: (String) -> Unit,
-    placeListViewModel: PlaceListViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+    viewModel: PlaceListViewModel = hiltViewModel(),
+) {
+
+    val placesState by viewModel.places.collectAsState()
+
+    ForYouScreen(
+        onCardClick = onCardClick,
+        places = placesState,
+        loadPlaces = viewModel::loadPlaces,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ForYouScreen(
+    onCardClick: (String) -> Unit,
+    places: List<Place>,
+    loadPlaces: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
 
-    val places by placeListViewModel.places.collectAsState()
 
     // observe list scrolling
     val reachedBottom: Boolean by remember {
@@ -63,7 +75,7 @@ fun HomeScreen(
 
     // load more if scrolled to bottom
     LaunchedEffect(reachedBottom) {
-        if (reachedBottom) placeListViewModel.loadPlaces()
+        if (reachedBottom) loadPlaces()
     }
 
     LaunchedEffect(places) {
@@ -148,46 +160,6 @@ fun GreetingText() {
 }
 
 @Composable
-fun OldPlaceCard(place: Place, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
-        ),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Premium",
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .padding(8.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
-            ) {
-                Text(place.name, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text("Dapatkan kemudahan atur keuangan")
-            }
-            Icon(
-                Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "More"
-            )
-        }
-    }
-}
-
-@Composable
 fun PlaceCard(
     place: Place,
     onCardClick: () -> Unit,
@@ -223,23 +195,21 @@ fun PlaceCard(
                     .fillMaxWidth()
             )
             // short desc
-            place.description?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                )
-            }
+            Text(
+                text = place.description,
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 }
 
 @Preview()
 @Composable()
-fun HomeScreenPreview() {
+fun ForYouScreenPreview() {
     AppTheme(darkTheme = false) {
-//        HomeScreen(navController = NavHostController(context = LocalContext.current))
+//        ForYouScreen(navController = NavHostController(context = LocalContext.current))
     }
 }

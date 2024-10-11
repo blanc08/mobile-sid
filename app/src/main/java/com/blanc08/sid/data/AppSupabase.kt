@@ -16,7 +16,6 @@
 
 package com.blanc08.sid.data
 
-import android.content.Context
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
@@ -32,7 +31,7 @@ abstract class AppSupabase {
         @Volatile
         private var instance: SupabaseClient? = null
 
-        fun getInstance(context: Context): SupabaseClient {
+        fun getInstance(): SupabaseClient {
             return instance ?: synchronized(this) {
                 instance ?: buildDatabase().also { instance = it }
             }
@@ -52,8 +51,8 @@ abstract class AppSupabase {
             }
         }
 
-        fun providePlaceDao() {
-            return
-        }
+        // fun providePlaceDao() {
+        //     return
+        // }
     }
 }

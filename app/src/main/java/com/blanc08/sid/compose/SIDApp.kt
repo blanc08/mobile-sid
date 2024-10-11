@@ -89,7 +89,7 @@ fun SakuHost() {
                     onCardClick = {
                         navController.navigate(
                             Screen.PlaceDetail.createRoute(
-                                id = it.id
+                                placeId = it
                             )
                         )
                     },

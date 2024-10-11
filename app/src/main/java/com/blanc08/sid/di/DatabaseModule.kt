@@ -32,6 +32,6 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): SupabaseClient {
-        return AppSupabase.getInstance(context)
+        return AppSupabase.getInstance()
     }
 }

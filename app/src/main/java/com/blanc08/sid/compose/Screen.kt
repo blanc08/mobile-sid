@@ -34,12 +34,12 @@ sealed class Screen(
 
 
     data object PlaceDetail : Screen(
-        route = "place/{id}",
-        navArguments = listOf(navArgument("id") {
+        route = "place/{placeId}",
+        navArguments = listOf(navArgument("placeId") {
             type = NavType.StringType
         })
     ) {
-        fun createRoute(id: String) = "place/${id}"
+        fun createRoute(placeId: String) = "place/${placeId}"
     }
 }
 
