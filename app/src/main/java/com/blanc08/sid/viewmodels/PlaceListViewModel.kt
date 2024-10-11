@@ -56,8 +56,6 @@ class PlaceListViewModel @Inject internal constructor(
     init {
         Log.d("PlaceListViewModel", "Loading Place List View Model")
         loadPlaces()
-        // viewModelScope.launch {
-        // }
     }
 
 

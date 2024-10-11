@@ -46,7 +46,8 @@ private const val buffer = 1;
 @Composable
 fun HomeScreen(
     onCardClick: (Place) -> Unit,
-    placeListViewModel: PlaceListViewModel = hiltViewModel()
+    placeListViewModel: PlaceListViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
 
@@ -70,7 +71,7 @@ fun HomeScreen(
     }
 
 
-    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp), modifier = modifier) {
         Header()
         LazyColumn(
             state = listState,

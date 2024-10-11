@@ -36,6 +36,7 @@ import com.blanc08.sid.viewmodels.PlaceViewModel
 fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
     placeViewModel: PlaceViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
 ) {
     val place by placeViewModel.place.collectAsState()
 

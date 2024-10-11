@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Place(
-    val id: String,
-    val name: String,
-    val description: String? = null,
-    val thumbnail: String? = null,
-    val image: String? = null,
-    val created_at: String? = null,
+    val id: String = "0",
+    val name: String = "",
+    val description: String = "",
+    val thumbnail: String = "",
+    val image: String? = "",
+    val created_at: String = "",
 ) {
     override fun toString() = name
 }

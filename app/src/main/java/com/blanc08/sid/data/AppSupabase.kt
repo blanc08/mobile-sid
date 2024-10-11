@@ -22,6 +22,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.JacksonSerializer
+import io.github.jan.supabase.storage.Storage
 
 
 abstract class AppSupabase {
@@ -42,10 +43,11 @@ abstract class AppSupabase {
         private fun buildDatabase(): SupabaseClient {
             return createSupabaseClient(
                 supabaseUrl = "https://vjkltshyvzrjxiwhgoln.supabase.co",
-                supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqa2x0c2h5dnpyanhpd2hnb2xuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjgyMzc2NTMsImV4cCI6MjA0MzgxMzY1M30.yMfka1aboZT-jDqD0e1LZ6Vx5bjBLJPiolh7bjtvjXE"
+                supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqa2x0c2h5dnpyanhpd2hnb2xuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyODIzNzY1MywiZXhwIjoyMDQzODEzNjUzfQ.2HtJEmdIdPjGZKauJGfQeve2wyKoonGTxwYRLHb14tE"
             ) {
                 install(Auth)
                 install(Postgrest)
+                install(Storage)
                 defaultSerializer = JacksonSerializer()
             }
         }

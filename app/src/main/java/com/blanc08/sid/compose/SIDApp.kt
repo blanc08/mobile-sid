@@ -51,41 +51,40 @@ fun SakuHost() {
     }
     val navController = rememberNavController()
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Screen.NewPlace.route)
-                },
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        bottomBar = {
-            BottomBar(
-                navigationSelectedItem = navigationSelectedItem,
-                onNavBarClick = { navigationItem, index ->
-                    navigationSelectedItem = index
-
-                    navController.navigate(navigationItem.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.route,
+    ) {
+        composable(Screen.Home.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate(Screen.NewPlace.route)
+                        },
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add")
                     }
+                },
+                floatingActionButtonPosition = FabPosition.End,
+                bottomBar = {
+                    BottomBar(
+                        navigationSelectedItem = navigationSelectedItem,
+                        onNavBarClick = { navigationItem, index ->
+                            navigationSelectedItem = index
+
+                            navController.navigate(navigationItem.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
                 }
-            )
-        }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = Screen.Home.route,
-            modifier = Modifier.padding(paddingValues = paddingValues)
-        ) {
-            composable(Screen.Home.route) {
+            ) { paddingValues ->
                 HomeScreen(
                     onCardClick = {
                         navController.navigate(
@@ -93,29 +92,77 @@ fun SakuHost() {
                                 id = it.id
                             )
                         )
-                    }
+                    },
+                    modifier = Modifier.padding(paddingValues = paddingValues)
                 )
             }
+        }
 
-            composable(
-                route = Screen.PlaceDetail.route,
-                arguments = Screen.PlaceDetail.navArguments
-            ) {
+        composable(
+            route = Screen.PlaceDetail.route,
+            arguments = Screen.PlaceDetail.navArguments
+        ) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate(Screen.NewPlace.route)
+                        },
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add")
+                    }
+                },
+                floatingActionButtonPosition = FabPosition.End,
+                bottomBar = {
+                    BottomBar(
+                        navigationSelectedItem = navigationSelectedItem,
+                        onNavBarClick = { navigationItem, index ->
+                            navigationSelectedItem = index
+
+                            navController.navigate(navigationItem.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            ) { paddingValues ->
                 PlaceDetailsScreen(
                     onBackClick = { navController.navigateUp() },
+                    modifier = Modifier.padding(paddingValues = paddingValues)
                 )
             }
+        }
 
-            composable(
-                route = Screen.NewPlace.route,
-            ) {
+        composable(
+            route = Screen.NewPlace.route,
+        ) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate(Screen.NewPlace.route)
+                        },
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add")
+                    }
+                },
+                floatingActionButtonPosition = FabPosition.End,
+            ) { paddingValues ->
                 NewPlaceScreen(
                     onBackClick = { navController.navigateUp() },
+                    modifier = Modifier.padding(paddingValues = paddingValues)
                 )
             }
+        }
 
-            composable(Screen.Transaction.route) {
-                Text("Transaction list")
+        composable(Screen.Transaction.route) {
+            Text("Transaction list")
 //                TransactionScreen(
 //                    onPhotoClick = {
 //                        val uri = Uri.parse(it.user.attributionUrl)
@@ -125,12 +172,12 @@ fun SakuHost() {
 //                    onUpClick = {
 //                        navController.navigateUp()
 //                    })
-            }
-            composable(Screen.Report.route) {
-                Text("Report page")
-            }
+        }
+        composable(Screen.Report.route) {
+            Text("Report page")
         }
     }
+
 }
 
 @Composable
