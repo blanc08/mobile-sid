@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    kotlin("plugin.serialization") version "1.9.20" // version conflict
+    alias(libs.plugins.compose.compiler)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.20"
 }
 
 android {
@@ -108,7 +109,7 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:3.0.0-rc-1")
 
     // coil
-    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
+    implementation("io.coil-kt.coil3:coil-compose:+")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-rc01")
 
     // paging
