@@ -1,4 +1,4 @@
-package com.blanc08.sid.ui.theme
+package com.blanc08.sid.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

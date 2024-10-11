@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blanc08.sid.data.place.Place
+import com.blanc08.sid.data.place.Photo
 import com.blanc08.sid.data.place.PlaceRepository
 import com.blanc08.sid.feature.place.navigation.PLACE_ID_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +22,8 @@ class PlaceViewModel @Inject constructor(
 ) : ViewModel() {
     private val placeId: StateFlow<String?> = savedStateHandle.getStateFlow(PLACE_ID_ARG, null)
 
-    private val _place = MutableStateFlow<Place?>(null)
-    val place: StateFlow<Place?> = _place.asStateFlow()
+    private val _place = MutableStateFlow<Photo?>(null)
+    val place: StateFlow<Photo?> = _place.asStateFlow()
 
     init {
         refreshData()

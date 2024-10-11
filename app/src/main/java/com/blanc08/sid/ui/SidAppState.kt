@@ -1,60 +1,46 @@
-package com.blanc08.sid.compose
+package com.blanc08.sid.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.util.trace
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.blanc08.sid.data.util.NetworkMonitor
-import com.blanc08.sid.data.util.TimeZoneMonitor
 import com.blanc08.sid.feature.foryou.navigation.FOR_YOU_ROUTE
 import com.blanc08.sid.feature.foryou.navigation.navigateToForYou
+import com.blanc08.sid.feature.gallery.navigation.GALLERY_ROUTE
+import com.blanc08.sid.feature.gallery.navigation.navigateToGallery
 import com.blanc08.sid.navigation.TopLevelDestination
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.datetime.TimeZone
 
 
 @Composable
-fun rememberNiaAppState(
-    networkMonitor: NetworkMonitor,
-    timeZoneMonitor: TimeZoneMonitor,
+fun rememberSidAppState(
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
-): NiaAppState {
+): SidAppState {
     // NavigationTrackingSideEffect(navController)
     return remember(
         navController,
         coroutineScope,
-        networkMonitor,
-        timeZoneMonitor,
     ) {
-        NiaAppState(
+        SidAppState(
             navController = navController,
             coroutineScope = coroutineScope,
-            networkMonitor = networkMonitor,
-            timeZoneMonitor = timeZoneMonitor,
         )
     }
 }
 
 
 @Stable
-class NiaAppState(
+class SidAppState(
     val navController: NavHostController,
     coroutineScope: CoroutineScope,
-    networkMonitor: NetworkMonitor,
-    timeZoneMonitor: TimeZoneMonitor,
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -63,48 +49,16 @@ class NiaAppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             FOR_YOU_ROUTE -> TopLevelDestination.FOR_YOU
-            // BOOKMARKS_ROUTE -> BOOKMARKS
-            // INTERESTS_ROUTE -> INTERESTS
+            GALLERY_ROUTE -> TopLevelDestination.GALLERY
+            // ABOUT_ROUTE -> TopLevelDestination.ABOUT
             else -> null
         }
-
-    val isOffline = networkMonitor.isOnline
-        .map(Boolean::not)
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false,
-        )
 
     /**
      * Map of top level destinations to be used in the TopBar, BottomBar and NavRail. The key is the
      * route.
      */
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
-
-    // /**
-    //  * The top level destinations that have unread news resources.
-    //  */
-    // val topLevelDestinationsWithUnreadResources: StateFlow<Set<TopLevelDestination>> =
-    //     userNewsResourceRepository.observeAllForFollowedTopics()
-    //         .combine(userNewsResourceRepository.observeAllBookmarked()) { forYouNewsResources, bookmarkedNewsResources ->
-    //             setOfNotNull(
-    //                 FOR_YOU.takeIf { forYouNewsResources.any { !it.hasBeenViewed } },
-    //                 BOOKMARKS.takeIf { bookmarkedNewsResources.any { !it.hasBeenViewed } },
-    //             )
-    //         }
-    //         .stateIn(
-    //             coroutineScope,
-    //             SharingStarted.WhileSubscribed(5_000),
-    //             initialValue = emptySet(),
-    //         )
-
-    val currentTimeZone = timeZoneMonitor.currentTimeZone
-        .stateIn(
-            coroutineScope,
-            SharingStarted.WhileSubscribed(5_000),
-            TimeZone.currentSystemDefault(),
-        )
 
     /**
      * UI logic for navigating to a top level destination in the app. Top level destinations have
@@ -123,16 +77,16 @@ class NiaAppState(
                     saveState = true
                 }
                 // Avoid multiple copies of the same destination when
-                // reselecting the same item
+                // re-selecting the same item
                 launchSingleTop = true
-                // Restore state when reselecting a previously selected item
+                // Restore state when re-selecting a previously selected item
                 restoreState = true
             }
 
             when (topLevelDestination) {
                 TopLevelDestination.FOR_YOU -> navController.navigateToForYou(topLevelNavOptions)
-                TopLevelDestination.GALLERY -> navController.navigateToForYou(topLevelNavOptions) // ! not implemented yet
-                TopLevelDestination.ABOUT -> navController.navigateToForYou(topLevelNavOptions) // ! not implemented yet
+                TopLevelDestination.GALLERY -> navController.navigateToGallery(topLevelNavOptions)
+                TopLevelDestination.ABOUT -> navController.navigateToForYou(topLevelNavOptions) // TODO: ! not implemented yet
             }
         }
     }

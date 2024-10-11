@@ -20,8 +20,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blanc08.sid.data.photo.PhotoRepository
 import com.blanc08.sid.data.place.Photo
-import com.blanc08.sid.data.place.PlaceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,38 +29,32 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * The ViewModel for plant list.
- */
 @HiltViewModel
-class PlaceListViewModel @Inject internal constructor(
-    private val repository: PlaceRepository,
+class GalleryViewModel @Inject internal constructor(
+    private val repository: PhotoRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _places = MutableStateFlow(emptyList<Photo>())
-    val places: StateFlow<List<Photo>> = _places.asStateFlow()
+    private val _pictures = MutableStateFlow(emptyList<Photo>())
+    val pictures: StateFlow<List<Photo>> = _pictures.asStateFlow()
 
-    fun loadPlaces(offset: String = "") {
+    fun loadAll(offset: String = "") {
         viewModelScope.launch {
-            val result = repository.getPlaces(offset)  // Call suspend function inside a coroutine
-            Log.d("PlaceListViewModel", "places fetched${result.toList()}")
-            _places.value = result
+            val result = repository.getPlaces(offset)
 
-            // TODO: push with delta item if offset provided
-            // _places.value = _places.value.plus(result)
+            Log.d(TAG, "pictures fetched: ${result.size}")
+            _pictures.value = result
         }
 
     }
 
     init {
         Log.d("PlaceListViewModel", "Loading Place List View Model")
-        loadPlaces()
+        loadAll()
     }
 
 
     companion object {
-        private const val NO_GROW_ZONE = -1
-        private const val GROW_ZONE_SAVED_STATE_KEY = "GROW_ZONE_SAVED_STATE_KEY"
+        private const val TAG = "GalleryViewModel"
     }
 }

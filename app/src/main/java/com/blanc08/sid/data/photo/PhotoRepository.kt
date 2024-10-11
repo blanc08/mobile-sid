@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.blanc08.sid.data.place
+package com.blanc08.sid.data.photo
 
 import android.util.Log
+import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.data.place.NewPlace
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.storage.storage
@@ -25,7 +27,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @Serializable
-data class NewPlace(
+data class NewGallery(
     val name: String = "",
     val description: String = "",
     val thumbnail: String = "",
@@ -34,7 +36,7 @@ data class NewPlace(
     override fun toString() = name
 }
 
-class PlaceRepository @Inject constructor(private val client: SupabaseClient) {
+class PhotoRepository @Inject constructor(private val client: SupabaseClient) {
 
     suspend fun getPlaces(delta: String = ""): List<Photo> {
         return client.from("place").select {

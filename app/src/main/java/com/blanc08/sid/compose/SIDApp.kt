@@ -37,7 +37,7 @@ import com.blanc08.sid.R
 import com.blanc08.sid.compose.components.BottomNavigationItem
 import com.blanc08.sid.compose.place.NewPlaceScreen
 import com.blanc08.sid.compose.place.PlaceDetailsScreen
-import com.blanc08.sid.ui.theme.AppTheme
+import com.blanc08.sid.designsystem.theme.AppTheme
 
 @Composable
 fun SIDApp() {
@@ -245,17 +245,3 @@ fun TopBar(
     )
 }
 
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    name = "DefaultPreviewDark"
-)
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
-    name = "DefaultPreviewLight"
-)
-@Composable
-fun RiceClassifierAppPreview() {
-    AppTheme {
-        SIDApp()
-    }
-}

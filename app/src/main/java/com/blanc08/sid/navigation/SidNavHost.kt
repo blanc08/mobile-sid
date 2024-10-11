@@ -3,10 +3,13 @@ package com.blanc08.sid.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.blanc08.sid.compose.NiaAppState
 import com.blanc08.sid.feature.foryou.navigation.FOR_YOU_ROUTE
 import com.blanc08.sid.feature.foryou.navigation.forYouScreen
+import com.blanc08.sid.feature.gallery.navigation.galleryScreen
+import com.blanc08.sid.feature.gallery.navigation.navigateToPicture
 import com.blanc08.sid.feature.place.navigation.navigateToPlaceDetail
+import com.blanc08.sid.feature.place.navigation.placeScreen
+import com.blanc08.sid.ui.SidAppState
 
 
 /**
@@ -18,7 +21,7 @@ import com.blanc08.sid.feature.place.navigation.navigateToPlaceDetail
  */
 @Composable
 fun SidNavHost(
-    appState: NiaAppState,
+    appState: SidAppState,
     onShowSnackbar: suspend (String, String?) -> Boolean,
     modifier: Modifier = Modifier,
     startDestination: String = FOR_YOU_ROUTE,
@@ -30,10 +33,10 @@ fun SidNavHost(
         modifier = modifier,
     ) {
         forYouScreen(onCardClick = navController::navigateToPlaceDetail)
-        // gallerySccreen(
-        //     onPictureClick = navController::navigateToInterests,
-        //     onShowSnackbar = onShowSnackbar,
-        // )
+        placeScreen(onBackClick = navController::popBackStack)
+        galleryScreen(
+            onPictureClick = navController::navigateToPicture,
+        )
         // searchScreen(
         //     onBackClick = navController::popBackStack,
         //     onInterestsClick = { appState.navigateToTopLevelDestination(INTERESTS) },

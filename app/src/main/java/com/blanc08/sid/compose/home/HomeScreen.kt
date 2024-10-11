@@ -29,16 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
-import com.blanc08.sid.data.place.Place
-import com.blanc08.sid.ui.theme.AppTheme
+import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.designsystem.theme.AppTheme
 import com.blanc08.sid.viewmodels.PlaceListViewModel
 
 private const val buffer = 1;
@@ -148,7 +146,7 @@ fun GreetingText() {
 }
 
 @Composable
-fun OldPlaceCard(place: Place, modifier: Modifier = Modifier) {
+fun OldPlaceCard(place: Photo, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -189,7 +187,7 @@ fun OldPlaceCard(place: Place, modifier: Modifier = Modifier) {
 
 @Composable
 fun PlaceCard(
-    place: Place,
+    place: Photo,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

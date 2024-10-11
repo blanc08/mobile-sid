@@ -1,4 +1,4 @@
-package com.blanc08.sid.ui.theme
+package com.blanc08.sid.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily

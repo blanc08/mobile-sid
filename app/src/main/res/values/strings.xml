@@ -3,4 +3,7 @@
     <string name="feature_foryou_title">Places</string>
     <string name="gallery_title">Gallery</string>
     <string name="about_title">About</string>
+    <string name="not_connected">Not Connected</string>
+    <string name="feature_settings_top_app_bar_navigation_icon_description">Settings</string>
+    <string name="feature_settings_top_app_bar_action_icon_description">Settings</string>
 </resources>

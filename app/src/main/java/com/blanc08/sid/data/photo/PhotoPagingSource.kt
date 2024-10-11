@@ -7,7 +7,7 @@ import io.github.jan.supabase.postgrest.from
 
 private const val UNSPLASH_STARTING_PAGE_INDEX = 1
 
-class PlacePagingSource(
+class PhotoPagingSource(
     private val client: SupabaseClient,
     private val query: String
 ) : PagingSource<Int, Photo>() {
@@ -15,12 +15,12 @@ class PlacePagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         val page = params.key ?: UNSPLASH_STARTING_PAGE_INDEX
         return try {
-            val places = client.from("place").select().decodeList<Photo>()
+            val records = client.from("photo").select().decodeList<Photo>()
 
             LoadResult.Page(
-                data = places,
+                data = records,
                 prevKey = if (page == UNSPLASH_STARTING_PAGE_INDEX) null else page - 1,
-                nextKey = if (page == places.size) null else page + 1
+                nextKey = if (page == records.size) null else page + 1
             )
         } catch (exception: Exception) {
             LoadResult.Error(exception)
