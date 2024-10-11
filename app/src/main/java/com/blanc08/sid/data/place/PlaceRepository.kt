@@ -36,21 +36,21 @@ data class NewPlace(
 
 class PlaceRepository @Inject constructor(private val client: SupabaseClient) {
 
-    suspend fun getPlaces(delta: String = ""): List<Photo> {
+    suspend fun getPlaces(delta: String = ""): List<Place> {
         return client.from("place").select {
             filter {
                 if (delta.isNotEmpty()) {
                     gt("created_at", delta)
                 }
             }
-        }.decodeList<Photo>()
+        }.decodeList<Place>()
     }
 
     suspend fun getPlace(id: String) = client.from("place").select {
         filter {
             eq("id", id)
         }
-    }.decodeSingle<Photo>()
+    }.decodeSingle<Place>()
 
     suspend fun uploadFile(byteArray: ByteArray, fileExtension: String = ".jpg"): String {
         try {
@@ -70,10 +70,10 @@ class PlaceRepository @Inject constructor(private val client: SupabaseClient) {
         return ""
     }
 
-    suspend fun createOne(newPlace: NewPlace): Photo {
+    suspend fun createOne(newPlace: NewPlace): Place {
         return client.from("place").insert(newPlace) {
             select()
-        }.decodeSingle<Photo>()
+        }.decodeSingle<Place>()
     }
 
     companion object {

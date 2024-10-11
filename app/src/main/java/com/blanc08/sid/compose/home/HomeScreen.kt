@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
-import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.designsystem.theme.AppTheme
 import com.blanc08.sid.viewmodels.PlaceListViewModel
 
@@ -146,7 +146,7 @@ fun GreetingText() {
 }
 
 @Composable
-fun OldPlaceCard(place: Photo, modifier: Modifier = Modifier) {
+fun OldPlaceCard(place: Place, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -187,7 +187,7 @@ fun OldPlaceCard(place: Photo, modifier: Modifier = Modifier) {
 
 @Composable
 fun PlaceCard(
-    place: Photo,
+    place: Place,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.data.place.PlaceRepository
 import com.blanc08.sid.feature.place.navigation.PLACE_ID_ARG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +22,8 @@ class PlaceViewModel @Inject constructor(
 ) : ViewModel() {
     private val placeId: StateFlow<String?> = savedStateHandle.getStateFlow(PLACE_ID_ARG, null)
 
-    private val _place = MutableStateFlow<Photo?>(null)
-    val place: StateFlow<Photo?> = _place.asStateFlow()
+    private val _place = MutableStateFlow<Place?>(null)
+    val place: StateFlow<Place?> = _place.asStateFlow()
 
     init {
         refreshData()
@@ -33,7 +33,7 @@ class PlaceViewModel @Inject constructor(
     private fun refreshData() {
         viewModelScope.launch {
             try {
-                Log.d("PlaceViewModel", "get place params: ${placeId.value}")
+                Log.d(TAG, "get place params: ${placeId.value}")
                 val placeIdValue = placeId.value
 
                 if (placeIdValue.isNullOrEmpty()) {
@@ -41,10 +41,10 @@ class PlaceViewModel @Inject constructor(
                 }
 
                 val result = repository.getPlace(placeIdValue)
-                Log.d("PlaceViewModel", "get place result: " + _place.value.toString())
+                Log.d(TAG, "get place result: " + _place.value.toString())
 
                 _place.value = result
-                Log.d("PlaceViewModel", "Place value: " + _place.value.toString())
+                Log.d(TAG, "Place value: " + _place.value.toString())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -52,7 +52,7 @@ class PlaceViewModel @Inject constructor(
     }
 
     companion object {
-        private const val PLACE_ID_SAVED_STATE_KEY = "id"
+        private const val TAG = "PlaceViewModel"
     }
 
 

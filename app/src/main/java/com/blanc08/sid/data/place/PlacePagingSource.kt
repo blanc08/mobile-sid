@@ -2,6 +2,7 @@ package com.blanc08.sid.data.place
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.blanc08.sid.data.photo.Photo
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 

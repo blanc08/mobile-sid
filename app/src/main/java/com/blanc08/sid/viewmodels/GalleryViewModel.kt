@@ -21,7 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blanc08.sid.data.photo.PhotoRepository
-import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.data.photo.Photo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,15 +35,15 @@ class GalleryViewModel @Inject internal constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _pictures = MutableStateFlow(emptyList<Photo>())
-    val pictures: StateFlow<List<Photo>> = _pictures.asStateFlow()
+    private val _photos = MutableStateFlow(emptyList<Photo>())
+    val photos: StateFlow<List<Photo>> = _photos.asStateFlow()
 
     fun loadAll(offset: String = "") {
         viewModelScope.launch {
             val result = repository.getPlaces(offset)
 
-            Log.d(TAG, "pictures fetched: ${result.size}")
-            _pictures.value = result
+            Log.d(TAG, "photos fetched: ${result.size}")
+            _photos.value = result
         }
 
     }

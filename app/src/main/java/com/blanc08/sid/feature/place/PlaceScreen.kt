@@ -25,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.viewmodels.PlaceViewModel
 
 @Composable
@@ -51,7 +51,7 @@ fun PlaceDetailRoute(
 @Composable
 fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
-    place: Photo,
+    place: Place,
     modifier: Modifier = Modifier
 ) {
 

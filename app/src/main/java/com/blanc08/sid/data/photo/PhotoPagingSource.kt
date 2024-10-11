@@ -1,4 +1,4 @@
-package com.blanc08.sid.data.place
+package com.blanc08.sid.data.photo
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

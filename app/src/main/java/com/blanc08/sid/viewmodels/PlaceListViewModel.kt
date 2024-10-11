@@ -17,10 +17,9 @@
 package com.blanc08.sid.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blanc08.sid.data.place.Photo
+import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.data.place.PlaceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,21 +28,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * The ViewModel for plant list.
- */
 @HiltViewModel
 class PlaceListViewModel @Inject internal constructor(
     private val repository: PlaceRepository,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _places = MutableStateFlow(emptyList<Photo>())
-    val places: StateFlow<List<Photo>> = _places.asStateFlow()
+    private val _places = MutableStateFlow(emptyList<Place>())
+    val places: StateFlow<List<Place>> = _places.asStateFlow()
 
     fun loadPlaces(offset: String = "") {
         viewModelScope.launch {
-            val result = repository.getPlaces(offset)  // Call suspend function inside a coroutine
+            val result = repository.getPlaces(offset)
             Log.d("PlaceListViewModel", "places fetched${result.toList()}")
             _places.value = result
 
@@ -54,13 +49,12 @@ class PlaceListViewModel @Inject internal constructor(
     }
 
     init {
-        Log.d("PlaceListViewModel", "Loading Place List View Model")
+        Log.d(TAG, "Loading Place List View Model")
         loadPlaces()
     }
 
 
     companion object {
-        private const val NO_GROW_ZONE = -1
-        private const val GROW_ZONE_SAVED_STATE_KEY = "GROW_ZONE_SAVED_STATE_KEY"
+        const val TAG = "PlaceListViewModel"
     }
 }
