@@ -36,8 +36,9 @@ import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.designsystem.theme.AppTheme
 import com.blanc08.sid.designsystem.theme.AppTypography
 import com.blanc08.sid.viewmodels.PlaceListViewModel
+import java.time.LocalTime
 
-private const val buffer = 1;
+private const val buffer = 1
 
 @Composable
 fun ForYouRoute(
@@ -112,7 +113,7 @@ fun Header() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(vertical = 20.dp, horizontal = 16.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -145,6 +146,15 @@ fun UtilIcons() {
 
 @Composable
 fun GreetingText() {
+    val currentTime = LocalTime.now()
+
+    val greeting = when (currentTime.hour) {
+        in 5..11 -> "Selamat Pagi"
+        in 12..17 -> "Selamat Siang"
+        in 18..21 -> "Selamat Malam"
+        else -> ""
+    }
+
     Column {
         Text(
             "Sistem informasi Desa",
@@ -153,7 +163,7 @@ fun GreetingText() {
             fontWeight = FontWeight.Bold
         )
         Text(
-            "Selamat Malam",
+            text = greeting,
             color = MaterialTheme.colorScheme.surface,
             fontSize = 16.sp
         )
@@ -207,10 +217,10 @@ fun PlaceCard(
     }
 }
 
-@Preview()
-@Composable()
+@Preview
+@Composable
 fun ForYouScreenPreview() {
     AppTheme(darkTheme = false) {
-//        ForYouScreen(navController = NavHostController(context = LocalContext.current))
+        // ForYouScreen(navController = NavHostController(context = LocalContext.current))
     }
 }
