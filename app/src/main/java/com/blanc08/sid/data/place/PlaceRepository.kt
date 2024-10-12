@@ -3,6 +3,7 @@ package com.blanc08.sid.data.place
 import android.util.Log
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.storage.storage
 import java.util.UUID
 import javax.inject.Inject
@@ -17,6 +18,10 @@ class PlaceRepository @Inject constructor(private val client: SupabaseClient) {
                     gt("created_at", delta)
                 }
             }
+            order(
+                "id",
+                order = Order.DESCENDING
+            )
         }.decodeList<Place>()
     }
 
