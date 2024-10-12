@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.designsystem.theme.AppTheme
+import com.blanc08.sid.designsystem.theme.AppTypography
 import com.blanc08.sid.viewmodels.PlaceListViewModel
 
 private const val buffer = 1;
@@ -189,15 +190,15 @@ fun PlaceCard(
             // Title Text
             Text(
                 text = place.name,
-                style = MaterialTheme.typography.titleSmall,
+                style = AppTypography.titleSmall,
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
             )
             // short desc
             Text(
-                text = place.description,
-                style = MaterialTheme.typography.titleSmall,
+                text = place.description.slice(0..50) + "...",
+                style = AppTypography.bodySmall,
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()

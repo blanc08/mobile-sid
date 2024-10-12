@@ -85,6 +85,7 @@ internal fun SidApp(
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
     val currentDestination = appState.currentDestination
+    val currentTopLevelDestination = appState.currentTopLevelDestination
 
     if (showSettingsDialog) {
         Text(text = "Setting, not ready yet...")
@@ -125,18 +126,20 @@ internal fun SidApp(
                 testTagsAsResourceId = true
             },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        if (currentDestination != null) {
-                            when (currentDestination.route) {
-                                FOR_YOU_ROUTE -> appState.navController.navigateToNewPlaceForm()
-                                GALLERY_ROUTE -> appState.navController.navigateToNewPlaceForm()
-                            }
-                        }
+                if (currentTopLevelDestination != null && currentTopLevelDestination.name != "ABOUT") {
 
-                    },
-                ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add")
+                    FloatingActionButton(
+                        onClick = {
+                            if (currentDestination != null) {
+                                when (currentDestination.route) {
+                                    FOR_YOU_ROUTE -> appState.navController.navigateToNewPlaceForm()
+                                    GALLERY_ROUTE -> appState.navController.navigateToNewPlaceForm()
+                                }
+                            }
+                        },
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add")
+                    }
                 }
             },
             floatingActionButtonPosition = FabPosition.End,

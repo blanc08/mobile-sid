@@ -8,9 +8,10 @@ fun AboutRoute() {
     AboutScreen()
 }
 
+
 @Composable
 fun AboutScreen() {
-    Text(
-        text = "OK"
-    )
+
+    Text(text = "OK")
+
 }

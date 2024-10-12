@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.blanc08.sid.feature.about.navigation.ABOUT_ROUTE
 import com.blanc08.sid.feature.about.navigation.navigateToAbout
 import com.blanc08.sid.feature.foryou.navigation.FOR_YOU_ROUTE
 import com.blanc08.sid.feature.foryou.navigation.navigateToForYou
@@ -51,7 +52,7 @@ class SidAppState(
         @Composable get() = when (currentDestination?.route) {
             FOR_YOU_ROUTE -> TopLevelDestination.FOR_YOU
             GALLERY_ROUTE -> TopLevelDestination.GALLERY
-            // ABOUT_ROUTE -> TopLevelDestination.ABOUT
+            ABOUT_ROUTE -> TopLevelDestination.ABOUT
             else -> null
         }
 
