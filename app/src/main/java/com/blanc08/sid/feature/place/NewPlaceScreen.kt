@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -34,6 +37,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.blanc08.sid.viewmodels.NewPlaceViewModel
@@ -53,7 +58,6 @@ fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
 @Composable
 fun NewPlaceScreen(
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier, // padding rendered too much with this component composition
     viewModel: NewPlaceViewModel = hiltViewModel(),
 ) {
     val place by viewModel.place.collectAsState()
@@ -82,10 +86,35 @@ fun NewPlaceScreen(
         }
     }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        // modifier = modifier
-    ) {
+    fun onSubmitButtonClick() {
+        Log.d("NewPlaceScreen", "starting saving process")
+        var byteArray: ByteArray? = null
+
+        if (selectedUri != null) {
+            byteArray = uriToByteArray(context, selectedUri!!)
+        }
+
+        byteArraySize = byteArray?.size
+        if (byteArray == null) {
+            Log.d("NewPlaceScreen", "photo is required")
+            return
+        }
+
+        if (place.name == "") {
+            Log.d("NewPlaceScreen", "name is required")
+            return
+        }
+
+        if (place.description == "") {
+            Log.d("NewPlaceScreen", "description is required")
+            return
+        }
+
+        viewModel.save(byteArray)
+        place.image?.let { Log.d("NewPlaceScreen", "Photo: $it") }
+    }
+
+    Column {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -103,18 +132,25 @@ fun NewPlaceScreen(
                 }
             },
         )
-        AsyncImage(
-            model = selectedUri,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp),
-            contentScale = ContentScale.Fit
-        )
+
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.padding(5.dp)
+            modifier = Modifier
+                .padding(5.dp)
+                .verticalScroll(state = rememberScrollState())
+
+
         ) {
+            if (selectedUri != null) {
+                AsyncImage(
+                    model = selectedUri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp),
+                    contentScale = ContentScale.Fit
+                )
+            }
             // Image Picker
             Button(
                 onClick = {
@@ -133,34 +169,52 @@ fun NewPlaceScreen(
                 onValueChange = {
                     viewModel.updateUsername(it)
                 },
-                value = place.name
+                singleLine = true,
+                value = place.name,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
             )
+
             // Description
             TextField(
                 label = { Text("Deskripsi") },
-                modifier = Modifier.fillMaxWidth(),
                 onValueChange = {
                     viewModel.updateDescription(it)
                 },
-                value = place.description
+                value = place.description,
+                singleLine = false,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                ),
+                supportingText = {
+                    Text(text = "minimum 100 karakter")
+                },
+                modifier = Modifier.fillMaxWidth(),
             )
-            Button(
-                onClick = {
-                    var byteArray: ByteArray? = null
 
-                    if (selectedUri != null) {
-                        byteArray = uriToByteArray(context, selectedUri!!)
-                    }
-
-                    byteArraySize = byteArray?.size
-
-                    if (byteArray != null) {
-                        viewModel.save(byteArray)
-                        place.image?.let { Log.d("NewPlaceScreen", "Photo: $it") }
-                    }
-
-
+            // Description
+            TextField(
+                label = { Text("Lokasi") },
+                onValueChange = {
+                    viewModel.updateLocation(it)
+                },
+                value = place.location ?: "",
+                singleLine = false,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                supportingText = {
+                    Text(text = "tidak wajib, cantumkan nama landmark atau alamat lengkap yang ingin ditampikan di peta (dapat disalin dari google map)")
                 }
+            )
+
+
+            Button(
+                onClick = { onSubmitButtonClick() }
             ) {
                 Text("Post")
             }

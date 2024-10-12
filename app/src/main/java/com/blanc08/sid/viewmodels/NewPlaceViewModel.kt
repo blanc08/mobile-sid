@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blanc08.sid.data.place.NewPlace
+import com.blanc08.sid.data.place.FieldValidation
+import com.blanc08.sid.data.place.NewPlaceDao
+import com.blanc08.sid.data.place.NewPlaceDaoValidation
 import com.blanc08.sid.data.place.PlaceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +17,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewPlaceViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val repository: PlaceRepository,
 ) : ViewModel() {
 
-    private val _place = MutableStateFlow(NewPlace())
-    val place: StateFlow<NewPlace> = _place.asStateFlow()
+    // data state
+    private val _place = MutableStateFlow(NewPlaceDao())
+    val place: StateFlow<NewPlaceDao> = _place.asStateFlow()
+
+    // validation state
+    private val _validation = MutableStateFlow(NewPlaceDaoValidation())
+    val validation: StateFlow<NewPlaceDaoValidation> = _validation.asStateFlow()
+
+
     private val _saved = MutableStateFlow(false)
     val saved = _saved.asStateFlow()
 
@@ -32,10 +40,25 @@ class NewPlaceViewModel @Inject constructor(
         _place.value = _place.value.copy(description = input)
     }
 
+    fun updateLocation(input: String) {
+        _place.value = _place.value.copy(location = input)
+    }
+
     fun save(byteArray: ByteArray) {
         viewModelScope.launch {
             try {
                 Log.d(TAG, "saving new place to database...")
+
+                // validation
+                if (_place.value.name.isEmpty()) {
+                    _validation.value = _validation.value.copy(
+                        nameValidator = FieldValidation(
+                            isValid = false,
+                            message = "invalid name"
+                        )
+                    )
+                    return@launch
+                }
 
                 val path = repository.uploadFile(byteArray)
                 _place.value = _place.value.copy(image = path, thumbnail = path)

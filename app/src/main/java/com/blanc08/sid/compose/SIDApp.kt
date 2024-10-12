@@ -1,5 +1,6 @@
 package com.blanc08.sid.compose
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -151,10 +152,13 @@ fun SakuHost() {
                 },
                 floatingActionButtonPosition = FabPosition.End,
             ) { paddingValues ->
-                NewPlaceScreen(
-                    onBackClick = { navController.navigateUp() },
-                    modifier = Modifier.padding(paddingValues = paddingValues)
-                )
+                Box(
+                    modifier = Modifier.padding(paddingValues)
+                ) {
+                    NewPlaceScreen(
+                        onBackClick = { navController.navigateUp() },
+                    )
+                }
             }
         }
 

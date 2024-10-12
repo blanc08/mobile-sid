@@ -8,6 +8,7 @@ data class Place(
     val id: String? = null,
     val name: String = "",
     val description: String = "",
+    val location: String?,
     val thumbnail: String = "",
     val image: String? = "",
     val created_at: String? = "",

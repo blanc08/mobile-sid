@@ -3,12 +3,8 @@ package com.blanc08.sid.feature.place
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,14 +21,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
@@ -40,6 +33,7 @@ import com.blanc08.sid.data.place.Place
 import com.blanc08.sid.designsystem.theme.AppTypography
 import com.blanc08.sid.designsystem.theme.primaryLight
 import com.blanc08.sid.viewmodels.PlaceViewModel
+import io.ktor.http.encodeURLParameter
 
 const val placeMapIFrameTemplate = """
     <html>
@@ -53,7 +47,7 @@ const val placeMapIFrameTemplate = """
                 frameborder="0" style="border:0"
                 referrerpolicy="no-referrer-when-downgrade"
                 src="https://www.google.com/maps/embed/v1/place?key={key}
-                &region=ID&q={q}&center=-6.8223604,107.1169712&zoom=13"
+                &region=ID&q={q}&zoom=13"
                 allowfullscreen>
           </iframe>
         </body>
@@ -63,7 +57,6 @@ const val placeMapIFrameTemplate = """
 @Composable
 fun PlaceDetailRoute(
     onBackClick: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: PlaceViewModel = hiltViewModel(),
 ) {
     val place by viewModel.place.collectAsState()
@@ -75,7 +68,6 @@ fun PlaceDetailRoute(
     PlaceDetailsScreen(
         onBackClick = onBackClick,
         place = place!!,
-        modifier = modifier
     )
 }
 
@@ -84,14 +76,19 @@ fun PlaceDetailRoute(
 fun PlaceDetailsScreen(
     onBackClick: () -> Unit,
     place: Place,
-    modifier: Modifier = Modifier
 ) {
 
     val scrollState = rememberScrollState(0)
 
-    val iFrameHtml =
+    var iFrameHtml =
         placeMapIFrameTemplate.replace("{key}", "AIzaSyChBILnLwS5iotE9suvFlmFkm4kSIFVirA")
-            .replace("{q}", " Ciputri, Perkebunan teh")
+
+
+    iFrameHtml = if (place.location != null && place.location != "") {
+        iFrameHtml.replace("{q}", place.location.encodeURLParameter())
+    } else {
+        iFrameHtml.replace("{q}", place.name)
+    }
 
 
     Column {
