@@ -3,6 +3,7 @@ package com.blanc08.sid.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.blanc08.sid.feature.about.navigation.aboutScreen
 import com.blanc08.sid.feature.foryou.navigation.FOR_YOU_ROUTE
 import com.blanc08.sid.feature.foryou.navigation.forYouScreen
 import com.blanc08.sid.feature.gallery.navigation.galleryScreen
@@ -38,11 +39,7 @@ fun SidNavHost(
             onPictureClick = navController::navigateToPicture,
             onBackClick = navController::popBackStack
         )
-        // searchScreen(
-        //     onBackClick = navController::popBackStack,
-        //     onInterestsClick = { appState.navigateToTopLevelDestination(INTERESTS) },
-        //     onTopicClick = navController::navigateToInterests,
-        // )
+        aboutScreen()
         // interestsListDetailScreen()
     }
 }

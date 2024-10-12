@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.blanc08.sid.feature.about.navigation.navigateToAbout
 import com.blanc08.sid.feature.foryou.navigation.FOR_YOU_ROUTE
 import com.blanc08.sid.feature.foryou.navigation.navigateToForYou
 import com.blanc08.sid.feature.gallery.navigation.GALLERY_ROUTE
@@ -86,7 +87,7 @@ class SidAppState(
             when (topLevelDestination) {
                 TopLevelDestination.FOR_YOU -> navController.navigateToForYou(topLevelNavOptions)
                 TopLevelDestination.GALLERY -> navController.navigateToGallery(topLevelNavOptions)
-                TopLevelDestination.ABOUT -> navController.navigateToForYou(topLevelNavOptions) // TODO: ! not implemented yet
+                TopLevelDestination.ABOUT -> navController.navigateToAbout(topLevelNavOptions)
             }
         }
     }

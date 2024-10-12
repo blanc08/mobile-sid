@@ -154,9 +154,6 @@ internal fun SidApp(
                         ),
                     ),
             ) {
-                // Show the top app bar on top level destinations.
-                val destination = appState.currentTopLevelDestination
-
                 SidNavHost(
                     appState = appState,
                     onShowSnackbar = { message, action ->
